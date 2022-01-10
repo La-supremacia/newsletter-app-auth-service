@@ -3,6 +3,7 @@ package controllers
 import (
 	"auth-service/pkg/models"
 	signup "auth-service/pkg/services"
+	"auth-service/pkg/utils"
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
@@ -15,13 +16,13 @@ func PostSignUp(c *fiber.Ctx) error {
 	if err := c.BodyParser(u); err != nil {
 		return err
 	}
-	//hashPasswordHere
-	hashPassword := u.Password
-	//hashPasswordHere
+
+	hashPassword := utils.GeneratePassword(u.Password)
 
 	createdUser := signup.NewUser_SignUp(u.Email, hashPassword, u.Name)
-	err := mgm.Coll(createdUser).Create(createdUser)
 	responseUser := signup.NewUser(u.Email, createdUser.OrganizationId)
+
+	err := mgm.Coll(createdUser).Create(createdUser)
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(err)
