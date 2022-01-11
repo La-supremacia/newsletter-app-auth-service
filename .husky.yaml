@@ -1,0 +1,4 @@
+hooks:
+  # hook scripts
+  pre-commit:
+    - go build -o bin/start-auth-service -v
