@@ -1,0 +1,4 @@
+hooks:
+  # hook scripts
+  pre-receive:
+    - go build -o bin/start-auth-service -v && git add . && git commit -m "NEW BUILD GENERATED" && git push
