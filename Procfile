@@ -1,1 +1,1 @@
-web: web $(bin/auth-service) 
+web: bin/auth-service 
