@@ -8,6 +8,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/kamva/mgm/v3"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func PostSignUp(c *fiber.Ctx) error {
@@ -19,8 +20,8 @@ func PostSignUp(c *fiber.Ctx) error {
 
 	hashPassword := utils.GeneratePassword(u.Password)
 
-	createdUser := signup.NewUser_SignUp(u.Email, hashPassword, u.Name)
-	responseUser := signup.NewUser(u.Email, createdUser.OrganizationId)
+	createdUser := signup.NewUser(u.Email, hashPassword, u.Name)
+	responseUser := signup.NewUser_SignUp(u.Email, createdUser.OrganizationId)
 
 	err := mgm.Coll(createdUser).Create(createdUser)
 
@@ -29,6 +30,37 @@ func PostSignUp(c *fiber.Ctx) error {
 	}
 	fmt.Println("Successfully saved user", responseUser)
 
+	return c.Status(fiber.StatusOK).JSON(responseUser)
+}
+
+func PostSignIn(c *fiber.Ctx) error {
+	u := new(models.User_SignUp_Request)
+
+	if err := c.BodyParser(u); err != nil {
+		return err
+	}
+
+	dbUser := signup.NewUser(u.Email, "", "")
+
+	err := mgm.Coll(dbUser).First(bson.M{"email": u.Email}, dbUser)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(err)
+	}
+
+	if !utils.ComparePasswords(dbUser.PasswordHash, u.Password) {
+		return c.Status(fiber.StatusUnauthorized).JSON("Wrong password")
+	}
+
+	accessToken, err := utils.GenerateNewAccessToken(dbUser.ID.Hex())
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(err)
+	}
+
+	responseUser := signup.NewUser_SignUp(dbUser.Email, dbUser.OrganizationId)
+
+	fmt.Println("Successfully logged user", dbUser.Email)
+
+	c.Set("Authorization", "Bearer "+accessToken)
 	return c.Status(fiber.StatusOK).JSON(responseUser)
 }
 
