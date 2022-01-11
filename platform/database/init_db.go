@@ -4,17 +4,16 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/kamva/mgm/v3"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-
-	env "auth-service/pkg/utils"
 )
 
 func Init() error {
-	mongoDBUri := env.GoDotEnvVariable("MONGODB_URI")
+	mongoDBUri := os.Getenv("MONGODB_URI")
 	err := mgm.SetDefaultConfig(nil, "auth", options.Client().ApplyURI(mongoDBUri))
 	if err != nil {
 		return err
