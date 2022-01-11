@@ -21,6 +21,7 @@ func Init() error {
 	}
 	fmt.Println("Successfully connected to mongo on URI", mongoDBUri)
 	fmt.Println("Setting Indexes Rules")
+	fmt.Println("TEST TEXT")
 	setUserIndexes()
 	fmt.Println("Finished Setting Indexes Rules")
 
