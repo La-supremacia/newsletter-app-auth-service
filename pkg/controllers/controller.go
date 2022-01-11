@@ -21,7 +21,7 @@ func PostSignUp(c *fiber.Ctx) error {
 	hashPassword := utils.GeneratePassword(u.Password)
 
 	createdUser := signup.NewUser(u.Email, hashPassword, u.Name)
-	responseUser := signup.NewUser_SignUp(u.Email, createdUser.OrganizationId)
+	responseUser := signup.NewUser_SignUp(createdUser.Email, createdUser.Name)
 
 	err := mgm.Coll(createdUser).Create(createdUser)
 
@@ -56,7 +56,7 @@ func PostSignIn(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(err)
 	}
 
-	responseUser := signup.NewUser_SignUp(dbUser.Email, dbUser.OrganizationId)
+	responseUser := signup.NewUser_SignUp(dbUser.Email, dbUser.Name)
 
 	fmt.Println("Successfully logged user", dbUser.Email)
 
