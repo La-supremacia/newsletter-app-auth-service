@@ -2,7 +2,7 @@ on:
   issues:
     types: [ assigned ]
     branches:
-    - name: dev
+    - name: development
 
 jobs:
   create_issue_branch_job:
