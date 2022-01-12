@@ -1,4 +1,4 @@
-package signup
+package services
 
 import "auth-service/pkg/models"
 
