@@ -1,11 +1,12 @@
-package signup
+package services
 
 import "auth-service/pkg/models"
 
-func NewUser_SignUp(email string, name string) *models.User_SignUp_Response {
+func NewUser_SignUp(email string, name string, id string) *models.User_SignUp_Response {
 	return &models.User_SignUp_Response{
 		Email: email,
 		Name:  name,
+		Id:    id,
 	}
 }
 
