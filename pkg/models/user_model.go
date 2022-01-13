@@ -18,4 +18,5 @@ type User_SignUp_Request struct {
 type User_SignUp_Response struct {
 	Email string `db:"email" json:"email" validate:"required,email,lte=255"`
 	Name  string `db:"name" json:"name" validate:"lte=255"`
+	Id    string `json:"_id,omitempty" validate:"lte=255"`
 }
